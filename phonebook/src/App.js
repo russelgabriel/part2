@@ -48,7 +48,20 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <h3>Add new Person</h3>
+      <PersonForm addPerson={addPerson} newName={newName} 
+      handleNewNameChange={handleNewNameChange} newNumber={newNumber} 
+      handleNewNumberChange={handleNewNumberChange} />
+      <h2>Numbers</h2>
+      <Filter searchName={searchName} handleSearchNameChange={handleSearchNameChange} />
+      <Contacts peopleToShow={peopleToShow} />
+    </div>
+  )
+}
+
+const PersonForm = ({addPerson, newName, handleNewNameChange, newNumber, handleNewNumberChange}) => {
+  return (
+    <div>
+      <h3>Add new Contact</h3>
       <form onSubmit={addPerson}>
         <div>
           name: <input value={newName} onChange={handleNewNameChange}/>
@@ -60,12 +73,23 @@ const App = () => {
           <button type='submit'>add</button>
         </div>
       </form>
-      <h2>Numbers</h2>
-      <div>
-        search <input value={searchName} onChange={handleSearchNameChange}/>
-      </div>
+    </div>
+  )
+}
+
+const Filter = ({searchName, handleSearchNameChange}) => {
+  return (
+    <div>
+      search <input value={searchName} onChange={handleSearchNameChange}/>
+    </div>
+  )
+}
+
+const Contacts = ({peopleToShow}) => {
+  return (
+    <div>
       <ul>
-        {peopleToShow.map(person => <li key={person.id}>{person.name} {person.number}</li>)}
+        {peopleToShow.map(person => <li key={person.name}>{person.name} {person.number}</li>)}
       </ul>
     </div>
   )
