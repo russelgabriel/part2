@@ -1,15 +1,23 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
+import axios from 'axios'
 
 const App = () => {
-  const [people, setPeople] = useState([
-    {name: "Russel Sy", number: "646-787-5397", id: 0},
-    {name: "Johnny Sins", number: "123456789", id: 1}, 
-    {name: "Mia Khalifa", number: "987654321", id: 2}
-  ])
+  const [people, setPeople] = useState([])
 
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [searchName, setSearchName] = useState("")
+
+  useEffect(() => {
+    console.log("effect");
+    axios
+      .get("http://localhost:3001/people")
+      .then(response => {
+        console.log("promise fulfilled");
+        setPeople(response.data)
+      })
+  }, [])
+  console.log("rendering", people.length, "contacts");
 
   const peopleToShow = people.filter(person => 
     person.name.toLowerCase().includes(searchName.toLowerCase()))
