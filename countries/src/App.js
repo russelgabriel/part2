@@ -154,14 +154,14 @@ const Weather = ({country, weatherInfo}) => {
     )
   }
 
-  const temp = weatherInfo.main.temp - 273.15
+  const temp = (weatherInfo.main.temp - 273.15).toFixed(2)
 
   return (
     <div>
       <h2>Weather in {country.capital[0]}</h2>
       <p>Temperature: {temp} °C</p>
       <img src={`http://openweathermap.org/img/wn/${weatherInfo.weather[0].icon}@2x.png`} />
-      <p>Wind: </p>
+      <p>Wind: {weatherInfo.wind.speed} m/s</p>
     </div>
   )
 }
