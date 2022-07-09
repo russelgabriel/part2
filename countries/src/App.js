@@ -31,6 +31,7 @@ const App = () => {
 
   const handleChooseCountry = country => {
     setChosenCountry(country)
+
   }
 
   return (
@@ -54,6 +55,7 @@ const Filter = ({handleFilterChange}) => {
 
 const Display = ({countriesToShow, chosenCountry, handleChooseCountry, weatherInfo, setWeatherInfo}) => {
   const numCountries = countriesToShow.length
+  
   if (numCountries > 10) {
     return (
       <div>
@@ -111,8 +113,6 @@ const CountryInfo = ({country, weatherInfo, setWeatherInfo}) => {
   const lat = country.capitalInfo.latlng[0]
   const lon = country.capitalInfo.latlng[1]
 
-  console.log(country);
-
   useEffect(() => {
     console.log("weather effect");
     axios
@@ -122,7 +122,9 @@ const CountryInfo = ({country, weatherInfo, setWeatherInfo}) => {
         console.log(response.data);
         setWeatherInfo(response.data)
       })
-  }, [])
+  }, [country])
+
+  // TODO: make sure the WeatherInfo props is changed before this component is rendered
 
   return (
     <div>
@@ -137,7 +139,7 @@ const CountryInfo = ({country, weatherInfo, setWeatherInfo}) => {
         {Object.values(country.languages).map(lang => <li key={lang}>{lang}</li>)}
       </ul>
       <img src={country.flags.png} />
-      <Weather country={country} weatherInfo={weatherInfo} setWeatherInfo={setWeatherInfo} />
+      <Weather country={country} weatherInfo={weatherInfo} />
     </div>
   )
 }
