@@ -1,5 +1,9 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
+import PersonForm from "./components/PersonForm"
+import Filter from "./components/Filter"
+import Contacts from './components/Contacts'
+import phonebookService from './services/phonebook'
 
 const App = () => {
   const [people, setPeople] = useState([])
@@ -9,12 +13,10 @@ const App = () => {
   const [searchName, setSearchName] = useState("")
 
   useEffect(() => {
-    console.log("effect");
-    axios
-      .get("http://localhost:3001/people")
-      .then(response => {
-        console.log("promise fulfilled");
-        setPeople(response.data)
+    phonebookService
+      .getAll()
+      .then(initialContacts => {
+        setPeople(initialContacts)
       })
   }, [])
   console.log("rendering", people.length, "contacts");
@@ -24,20 +26,24 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    const newPerson = {
+    const personObject = {
       name: newName,
       number: newNumber
     }
 
     const found = people.find(person => 
-      JSON.stringify(person.name) === JSON.stringify(newPerson.name))
+      JSON.stringify(person.name) === JSON.stringify(personObject.name))
 
     if (found) {
-      alert(`${newPerson.name} is already added to phonebook`)
+      alert(`${personObject.name} is already added to phonebook`)
     } else {
-      setPeople(people.concat(newPerson))
-      setNewName("")
-      setNewNumber("")      
+      phonebookService
+        .create(personObject)
+        .then( newPerson => {
+          setPeople(people.concat(newPerson))
+          setNewName("")
+          setNewNumber("")   
+        })   
     }
   }
 
@@ -62,43 +68,6 @@ const App = () => {
       <h2>Numbers</h2>
       <Filter searchName={searchName} handleSearchNameChange={handleSearchNameChange} />
       <Contacts peopleToShow={peopleToShow} />
-    </div>
-  )
-}
-
-const PersonForm = ({addPerson, newName, handleNewNameChange, newNumber, handleNewNumberChange}) => {
-  return (
-    <div>
-      <h3>Add new Contact</h3>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNewNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNewNumberChange}/>
-        </div>
-        <div>
-          <button type='submit'>add</button>
-        </div>
-      </form>
-    </div>
-  )
-}
-
-const Filter = ({searchName, handleSearchNameChange}) => {
-  return (
-    <div>
-      search <input value={searchName} onChange={handleSearchNameChange}/>
-    </div>
-  )
-}
-
-const Contacts = ({peopleToShow}) => {
-  return (
-    <div>
-      <ul>
-        {peopleToShow.map(person => <li key={person.name}>{person.name} {person.number}</li>)}
-      </ul>
     </div>
   )
 }
