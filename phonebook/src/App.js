@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react'
-import axios from 'axios'
 import PersonForm from "./components/PersonForm"
 import Filter from "./components/Filter"
 import Contacts from './components/Contacts'
@@ -19,7 +18,6 @@ const App = () => {
         setPeople(initialContacts)
       })
   }, [])
-  console.log("rendering", people.length, "contacts");
 
   const peopleToShow = people.filter(person => 
     person.name.toLowerCase().includes(searchName.toLowerCase()))
@@ -47,6 +45,16 @@ const App = () => {
     }
   }
 
+  const deletePerson = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      phonebookService
+        .del(person.id)
+        .then(response => {
+          setPeople(people.filter(contact => contact.id !== person.id))
+        })
+    }
+  }
+
   const handleNewNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -67,7 +75,7 @@ const App = () => {
       handleNewNumberChange={handleNewNumberChange} />
       <h2>Numbers</h2>
       <Filter searchName={searchName} handleSearchNameChange={handleSearchNameChange} />
-      <Contacts peopleToShow={peopleToShow} />
+      <Contacts peopleToShow={peopleToShow} handleClick={deletePerson}/>
     </div>
   )
 }

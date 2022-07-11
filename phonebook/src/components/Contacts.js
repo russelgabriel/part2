@@ -1,10 +1,14 @@
 import React from "react"
 
-const Contacts = ({peopleToShow}) => {
+const Contacts = ({peopleToShow, handleClick}) => {
     return (
       <div>
         <ul>
-          {peopleToShow.map(person => <li key={person.name}>{person.name} {person.number}</li>)}
+          {peopleToShow.map(person => 
+            <li key={person.name}>
+              {person.name} {person.number}
+              <button onClick={() => handleClick(person)} >delete</button>
+            </li>)}
         </ul>
       </div>
     )
