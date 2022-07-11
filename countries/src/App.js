@@ -132,7 +132,7 @@ const CountryInfo = ({country, weatherInfo, setWeatherInfo}) => {
       <p>
         Capital: {country.capital[0]}
         <br/>
-        Area: {country.area}
+        Area: {country.area} km^2
       </p>
       <h3>Langauges:</h3>
       <ul>
