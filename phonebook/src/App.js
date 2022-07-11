@@ -3,6 +3,7 @@ import PersonForm from "./components/PersonForm"
 import Filter from "./components/Filter"
 import Contacts from './components/Contacts'
 import phonebookService from './services/phonebook'
+import axios from 'axios'
 
 const App = () => {
   const [people, setPeople] = useState([])
@@ -32,8 +33,17 @@ const App = () => {
     const found = people.find(person => 
       JSON.stringify(person.name) === JSON.stringify(personObject.name))
 
+
     if (found) {
-      alert(`${personObject.name} is already added to phonebook`)
+      if (window.confirm(`${personObject.name} is already added to the phonebook. Would you like to edit this contact's number?`)) {
+        phonebookService
+          .update(found.id, personObject)
+          .then(editedContact => {
+            setPeople(people.map(person => person.id === editedContact.id ? editedContact : person))
+            setNewName("")
+            setNewNumber("")   
+          })
+      }
     } else {
       phonebookService
         .create(personObject)
