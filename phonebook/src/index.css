@@ -1,0 +1,17 @@
+.goodnotif {
+    background: lightgrey;
+    color: green;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 20px;
+}
+
+.badnotif {
+    background: lightgrey;
+    color: red;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 20px;
+}

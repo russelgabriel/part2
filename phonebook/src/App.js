@@ -3,7 +3,6 @@ import PersonForm from "./components/PersonForm"
 import Filter from "./components/Filter"
 import Contacts from './components/Contacts'
 import phonebookService from './services/phonebook'
-import axios from 'axios'
 
 const App = () => {
   const [people, setPeople] = useState([])
@@ -11,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [searchName, setSearchName] = useState("")
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     phonebookService
@@ -41,7 +41,24 @@ const App = () => {
           .then(editedContact => {
             setPeople(people.map(person => person.id === editedContact.id ? editedContact : person))
             setNewName("")
-            setNewNumber("")   
+            setNewNumber("")
+            setNotification({
+              message: `${personObject.name}'s number has been changed`, 
+              type: "goodnotif"
+            })
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
+          .catch(error => {
+            setNotification({
+              message: `${personObject.name} has already been removed from the server`, 
+              type: "badnotif"
+            })
+            setPeople(people.filter(person => person.name !== personObject.name))
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
           })
       }
     } else {
@@ -51,6 +68,13 @@ const App = () => {
           setPeople(people.concat(newPerson))
           setNewName("")
           setNewNumber("")   
+          setNotification({
+            message: `Added ${personObject.name}`, 
+            type: "goodnotif"
+          })
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
         })   
     }
   }
@@ -80,12 +104,27 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} />
       <PersonForm addPerson={addPerson} newName={newName} 
       handleNewNameChange={handleNewNameChange} newNumber={newNumber} 
       handleNewNumberChange={handleNewNumberChange} />
       <h2>Numbers</h2>
       <Filter searchName={searchName} handleSearchNameChange={handleSearchNameChange} />
       <Contacts peopleToShow={peopleToShow} handleClick={deletePerson}/>
+    </div>
+  )
+}
+
+const Notification = ({notification}) => {
+  if (notification === null) {
+    return (
+      <div></div>
+    )
+  }
+
+  return (
+    <div className={notification.type}>
+      {notification.message}
     </div>
   )
 }
