@@ -72,10 +72,15 @@ const App = () => {
             message: `Added ${personObject.name}`, 
             type: "goodnotif"
           })
-          setTimeout(() => {
-            setNotification(null)
-          }, 5000)
-        })   
+        })
+        .catch(error => {
+          console.log(error.response.data.error);
+          setNotification({
+            message: error.response.data.error,
+            type: "badnotif"
+          })
+        })
+        setTimeout(() => setNotification(null), 5000)  
     }
   }
 
